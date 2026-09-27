@@ -1,0 +1,2936 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Election System V2</title>
+
+<style>
+
+:root{
+    --primary:#0b3d91;
+    --primary-light:#1565c0;
+    --secondary:#082c68;
+    --success:#16a34a;
+    --danger:#dc3545;
+    --warning:#f59e0b;
+    --gray:#64748b;
+    --bg:#f1f5f9;
+    --card:#ffffff;
+    --text:#1e293b;
+    --border:#e2e8f0;
+}
+
+body.dark{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --text:#f8fafc;
+    --border:#334155;
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Tahoma,"Noto Sans Thai",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    transition:.3s;
+}
+
+/* HEADER */
+
+header{
+    background:linear-gradient(
+        135deg,
+        #061f52,
+        #0b3d91,
+        #1565c0
+    );
+    color:white;
+    padding:25px 20px;
+    text-align:center;
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+
+header h1{
+    margin:0;
+    font-size:28px;
+}
+
+header p{
+    margin:8px 0 0;
+    opacity:.85;
+}
+
+/* NAVIGATION */
+
+nav{
+    background:var(--secondary);
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    padding:10px;
+    flex-wrap:wrap;
+    position:sticky;
+    top:0;
+    z-index:100;
+}
+
+nav a{
+    color:white;
+    text-decoration:none;
+    padding:10px 16px;
+    border-radius:8px;
+    font-size:14px;
+    transition:.2s;
+}
+
+nav a:hover,
+nav a.active{
+    background:var(--primary-light);
+}
+
+/* DARK BUTTON */
+
+.dark-toggle{
+    position:fixed;
+    right:20px;
+    bottom:20px;
+    border-radius:50%;
+    width:55px;
+    height:55px;
+    padding:0;
+    font-size:20px;
+    z-index:999;
+}
+
+/* CONTAINER */
+
+.container{
+    max-width:1200px;
+    margin:25px auto;
+    padding:0 15px;
+}
+
+.section{
+    display:none;
+}
+
+.section.active{
+    display:block;
+}
+
+/* CARD */
+
+.card{
+    background:var(--card);
+    border-radius:16px;
+    padding:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    margin-bottom:20px;
+    border:1px solid var(--border);
+}
+
+/* ANNOUNCEMENT */
+
+.announcement{
+    background:#eaf2ff;
+    border-left:6px solid var(--primary-light);
+    padding:18px;
+    border-radius:10px;
+    margin-bottom:20px;
+    color:#1e3a5f;
+}
+
+body.dark .announcement{
+    background:#172554;
+    color:#dbeafe;
+}
+
+/* FORM */
+
+.question{
+    margin:20px 0;
+}
+
+.title{
+    display:block;
+    font-weight:bold;
+    margin-bottom:8px;
+}
+
+.required{
+    color:red;
+}
+
+input,
+select{
+    width:100%;
+    padding:13px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--card);
+    color:var(--text);
+    font-size:15px;
+}
+
+input:focus,
+select:focus{
+    outline:none;
+    border-color:var(--primary-light);
+    box-shadow:0 0 0 3px rgba(21,101,192,.15);
+}
+
+/* BUTTON */
+
+button{
+    background:linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-light)
+    );
+
+    color:white;
+    border:0;
+    padding:12px 20px;
+    border-radius:10px;
+    font-size:14px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.2s;
+    margin:3px;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+.btn-success{
+    background:linear-gradient(
+        135deg,
+        #15803d,
+        #22c55e
+    );
+}
+
+.btn-danger{
+    background:linear-gradient(
+        135deg,
+        #b91c1c,
+        #ef4444
+    );
+}
+
+.btn-warning{
+    background:linear-gradient(
+        135deg,
+        #d97706,
+        #f59e0b
+    );
+}
+
+.btn-gray{
+    background:linear-gradient(
+        135deg,
+        #475569,
+        #64748b
+    );
+}
+
+/* OPTIONS */
+
+.option{
+    display:block;
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:10px 0;
+    cursor:pointer;
+    transition:.2s;
+    background:var(--card);
+}
+
+.option:hover{
+    border-color:var(--primary-light);
+    background:#eff6ff;
+}
+
+body.dark .option:hover{
+    background:#1e3a5f;
+}
+
+.option input{
+    width:auto;
+    margin-right:8px;
+}
+
+/* DASHBOARD */
+
+.dashboard-grid{
+    display:grid;
+    grid-template-columns:
+        repeat(auto-fit,minmax(190px,1fr));
+    gap:15px;
+    margin:20px 0;
+}
+
+.dash-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:22px;
+    border-radius:15px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.05);
+}
+
+.dash-card h3{
+    margin:0;
+    font-size:32px;
+    color:var(--primary-light);
+}
+
+.dash-card p{
+    margin:8px 0 0;
+    color:var(--gray);
+}
+
+/* TABLE */
+
+.table-wrapper{
+    overflow-x:auto;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:15px;
+}
+
+th,
+td{
+    padding:12px;
+    border-bottom:1px solid var(--border);
+    text-align:left;
+    font-size:14px;
+}
+
+th{
+    background:#eaf2ff;
+    color:#0b3d91;
+}
+
+body.dark th{
+    background:#172554;
+    color:#dbeafe;
+}
+
+/* BADGE */
+
+.badge{
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:20px;
+    color:white;
+    font-size:12px;
+    font-weight:bold;
+}
+
+.badge-success{
+    background:var(--success);
+}
+
+.badge-danger{
+    background:var(--danger);
+}
+
+.badge-disqualified{
+    background:var(--gray);
+}
+
+/* RESULTS */
+
+.result-card{
+    padding:15px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    margin:10px 0;
+}
+
+.result-header{
+    display:flex;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:8px;
+}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#e2e8f0;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    background:
+        linear-gradient(
+            90deg,
+            #0b3d91,
+            #3b82f6
+        );
+    border-radius:20px;
+}
+
+/* SEARCH */
+
+.search-box{
+    margin:15px 0;
+}
+
+/* STATUS */
+
+.system-status{
+    display:inline-block;
+    padding:6px 12px;
+    background:#dcfce7;
+    color:#166534;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}
+
+body.dark .system-status{
+    background:#14532d;
+    color:#bbf7d0;
+}
+
+/* FOOTER */
+
+footer{
+    text-align:center;
+    padding:25px;
+    color:var(--gray);
+    font-size:13px;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    header h1{
+        font-size:22px;
+    }
+
+    .card{
+        padding:18px;
+    }
+
+    nav a{
+        padding:8px 10px;
+        font-size:12px;
+    }
+
+    .result-header{
+        flex-direction:column;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header>
+
+    <h1>🗳️ ELECTION SYSTEM V2</h1>
+
+    <p>ระบบการเลือกตั้งออนไลน์</p>
+
+    <br>
+
+    <span class="system-status">
+        ● ระบบพร้อมใช้งาน
+    </span>
+
+</header>
+
+
+<!-- ================= NAV ================= -->
+
+<nav>
+
+    <a href="#"
+       onclick="showPage('home')"
+       id="nav-home"
+       class="active">
+        🏠 หน้าแรก
+    </a>
+
+    <a href="#"
+       onclick="showPage('check')"
+       id="nav-check">
+        🔐 ตรวจสอบสิทธิ
+    </a>
+
+    <a href="#"
+       onclick="showPage('docs')"
+       id="nav-docs">
+        📄 เอกสาร
+    </a>
+
+    <a href="#"
+       onclick="showPage('admin')"
+       id="nav-admin">
+        👨💼 ADMIN
+    </a>
+
+</nav>
+
+
+<div class="container">
+
+
+<!-- =====================================================
+     HOME
+===================================================== -->
+
+<div id="page-home" class="section active">
+
+    <div class="card">
+
+        <div class="announcement">
+
+            <h3>📢 ประกาศการเลือกตั้ง</h3>
+
+            <p>
+                กรุณาตรวจสอบสิทธิและข้อมูลของท่าน
+                ก่อนดำเนินการลงคะแนน
+                เพื่อให้การเลือกตั้งเป็นไปอย่างถูกต้อง
+                โปร่งใส และเป็นธรรม
+            </p>
+
+        </div>
+
+
+        <h2>
+            📝 ลงทะเบียนผู้มีสิทธิเลือกตั้ง
+        </h2>
+
+
+        <div class="question">
+
+            <label class="title">
+                ชื่อ - นามสกุล
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="reg-name"
+                placeholder="กรอกชื่อ - นามสกุล"
+            >
+
+        </div>
+
+
+        <div class="question">
+
+            <label class="title">
+                หมายเลขประจำตัว 6 หลัก
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="text"
+                id="reg-code"
+                maxlength="6"
+                inputmode="numeric"
+                placeholder="เช่น 151111"
+            >
+
+        </div>
+
+
+        <div class="question">
+
+            <label class="title">
+                เขตเลือกตั้ง
+                <span class="required">*</span>
+            </label>
+
+            <select id="reg-district">
+
+                <option value="">
+                    -- เลือกเขตเลือกตั้ง --
+                </option>
+
+                <option value="1">
+                    เขตพื้นที่ 1
+                </option>
+
+                <option value="2">
+                    เขตพื้นที่ 2
+                </option>
+
+                <option value="3">
+                    เขตพื้นที่ 3
+                </option>
+
+                <option value="5">
+                    เขตพื้นที่ 5
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="question">
+
+            <label class="title">
+                ลำดับที่
+                <span class="required">*</span>
+            </label>
+
+            <input
+                type="number"
+                id="reg-number"
+                min="1"
+                placeholder="เช่น 1"
+            >
+
+        </div>
+
+
+        <button onclick="registerVoter()">
+            📝 ลงทะเบียนผู้มีสิทธิ
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CHECK
+===================================================== -->
+
+<div id="page-check" class="section">
+
+    <div class="card">
+
+        <h2>
+            🔐 ตรวจสอบสิทธิเลือกตั้ง
+        </h2>
+
+        <p>
+            กรอกหมายเลขประจำตัว 6 หลัก
+            เพื่อเข้าสู่ระบบลงคะแนน
+        </p>
+
+
+        <div class="question">
+
+            <label class="title">
+                หมายเลขประจำตัว 6 หลัก
+            </label>
+
+            <input
+                type="text"
+                id="chk-code"
+                maxlength="6"
+                inputmode="numeric"
+                placeholder="กรอกรหัส 6 หลัก"
+            >
+
+        </div>
+
+
+        <button onclick="verifyVoter()">
+            🔍 ตรวจสอบสิทธิ
+        </button>
+
+
+        <div
+            id="chk-result"
+            style="margin-top:20px;">
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     VOTE
+===================================================== -->
+
+<div id="page-vote" class="section">
+
+    <div class="card">
+
+        <h2>
+            🗳️ ห้องลงคะแนนเสียง
+        </h2>
+
+        <div class="announcement">
+
+            กรุณาเลือกผู้สมัครและพรรคการเมือง
+            จากนั้นตรวจสอบข้อมูลก่อนยืนยัน
+            การลงคะแนน
+
+        </div>
+
+
+        <div id="vote-form-container"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     CONFIRM
+===================================================== -->
+
+<div id="page-confirm" class="section">
+
+    <div class="card">
+
+        <h2>
+            📋 ตรวจสอบก่อนยืนยัน
+        </h2>
+
+
+        <div
+            id="confirm-details"
+            class="announcement">
+        </div>
+
+
+        <button
+            class="btn-gray"
+            onclick="showPage('vote')">
+
+            ← กลับไปแก้ไข
+
+        </button>
+
+
+        <button
+            class="btn-success"
+            onclick="submitFinalVote()">
+
+            ✓ ยืนยันการลงคะแนน
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SUCCESS
+===================================================== -->
+
+<div id="page-success" class="section">
+
+    <div
+        class="card"
+        style="
+            text-align:center;
+            padding:60px 20px;
+        ">
+
+        <div style="font-size:70px;">
+            🗳️
+        </div>
+
+
+        <h2 style="color:#16a34a;">
+            ✓ ลงคะแนนสำเร็จ
+        </h2>
+
+
+        <p>
+            ระบบได้บันทึกสถานะการใช้สิทธิ
+            ของท่านเรียบร้อยแล้ว
+        </p>
+
+
+        <p>
+            ขอบคุณที่ร่วมใช้สิทธิเลือกตั้ง
+        </p>
+
+
+        <button onclick="finishSession()">
+            กลับสู่หน้าแรก
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     DOCUMENT
+===================================================== -->
+
+<div id="page-docs" class="section">
+
+    <div class="card">
+
+        <h2>
+            📄 เอกสารการเลือกตั้ง
+        </h2>
+
+
+        <ul>
+
+            <li>
+
+                <a
+                    href="https://drive.google.com/file/d/1FMO5I6YuiddIUUHhr0Ka6Zvw_xLAHiIB/view?usp=drivesdk"
+                    target="_blank">
+
+                    รายชื่อผู้มีสิทธิเลือกตั้ง
+                    และการใช้สิทธิ (ฉบับที่ 1)
+
+                </a>
+
+            </li>
+
+            <br>
+
+
+            <li>
+
+                <a
+                    href="https://drive.google.com/file/d/1SQN67NStpvbKuH4FfmIRPDerRH3A1H0K/view?usp=drivesdk"
+                    target="_blank">
+
+                    รายชื่อผู้มีสิทธิเลือกตั้ง
+                    และการใช้สิทธิ (ฉบับที่ 2)
+
+                </a>
+
+            </li>
+
+            <br>
+
+
+            <li>
+
+                <a
+                    href="https://drive.google.com/file/d/1amycLOcbpWYBu6ehgU-iFuIQnH3qukPC/view?usp=drivesdk"
+                    target="_blank">
+
+                    ข้อมูลข่าวสาร
+                    คณะกรรมการการเลือกตั้ง
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ADMIN
+===================================================== -->
+
+<div id="page-admin" class="section">
+
+
+    <!-- ADMIN LOGIN -->
+
+    <div
+        class="card"
+        id="admin-login-card">
+
+        <h2>
+            👨💼 ระบบผู้ดูแล
+        </h2>
+
+
+        <div class="question">
+
+            <label class="title">
+                ชื่อผู้ใช้งาน
+            </label>
+
+            <input
+                type="text"
+                id="adm-user"
+                placeholder="นายโยธิน กัลยาณิวัฒนา"
+            >
+
+        </div>
+
+
+        <div class="question">
+
+            <label class="title">
+                รหัสผ่าน
+            </label>
+
+            <input
+                type="password"
+                id="adm-pass"
+                placeholder="กรอกรหัสผ่าน"
+            >
+
+        </div>
+
+
+        <button onclick="adminLogin()">
+            🔐 เข้าสู่ระบบ
+        </button>
+
+    </div>
+
+
+    <!-- ADMIN DASHBOARD -->
+
+    <div
+        id="admin-dashboard"
+        style="display:none;">
+
+        <div class="card">
+
+
+            <div style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                flex-wrap:wrap;
+                gap:10px;
+            ">
+
+                <div>
+
+                    <h2>
+                        📊 Election Dashboard
+                    </h2>
+
+                    <p>
+                        อัปเดตล่าสุด:
+                        <span id="last-update"></span>
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        class="btn-warning"
+                        onclick="exportCSV()">
+
+                        📥 Export CSV
+
+                    </button>
+
+
+                    <button
+                        class="btn-gray"
+                        onclick="backupData()">
+
+                        💾 Backup
+
+                    </button>
+
+
+                    <button
+                        class="btn-danger"
+                        onclick="adminLogout()">
+
+                        ออกจากระบบ
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- STATISTICS -->
+
+            <div class="dashboard-grid">
+
+
+                <div class="dash-card">
+
+                    <h3 id="stat-voters">
+                        0
+                    </h3>
+
+                    <p>
+                        👥 ผู้มีสิทธิทั้งหมด
+                    </p>
+
+                </div>
+
+
+                <div class="dash-card">
+
+                    <h3 id="stat-voted">
+                        0
+                    </h3>
+
+                    <p>
+                        🗳️ ใช้สิทธิแล้ว
+                    </p>
+
+                </div>
+
+
+                <div class="dash-card">
+
+                    <h3 id="stat-pending">
+                        0
+                    </h3>
+
+                    <p>
+                        ⏳ ยังไม่ใช้สิทธิ
+                    </p>
+
+                </div>
+
+
+                <div class="dash-card">
+
+                    <h3 id="stat-turnout">
+                        0%
+                    </h3>
+
+                    <p>
+                        📈 อัตราการใช้สิทธิ
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- VOTERS -->
+
+            <h3>
+                👥 รายชื่อผู้มีสิทธิ
+            </h3>
+
+
+            <input
+                class="search-box"
+                type="text"
+                placeholder="🔍 ค้นหาชื่อหรือรหัส..."
+                oninput="searchVoters(this.value)"
+            >
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                ลำดับ
+                            </th>
+
+                            <th>
+                                ชื่อ
+                            </th>
+
+                            <th>
+                                รหัส
+                            </th>
+
+                            <th>
+                                เขต
+                            </th>
+
+                            <th>
+                                สถานะ
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="tbl-voters"></tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- CANDIDATE RESULTS -->
+
+            <h3 style="margin-top:40px;">
+
+                🏆 ผลคะแนน ส.ส.
+                แบบแบ่งเขต
+
+            </h3>
+
+
+            <div id="candidate-results"></div>
+
+
+            <!-- PARTY RESULTS -->
+
+            <h3 style="margin-top:40px;">
+
+                🏛️ ผลคะแนน
+                แบบบัญชีรายชื่อ
+
+            </h3>
+
+
+            <div id="party-results"></div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+
+<!-- DARK MODE -->
+
+<button
+    class="dark-toggle"
+    onclick="toggleDarkMode()">
+
+    🌙
+
+</button>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+    ELECTION SYSTEM V2
+
+    <br>
+
+    ระบบจำลองการเลือกตั้ง
+
+</footer>
+
+
+<script>
+
+/* =====================================================
+   DATABASE
+===================================================== */
+
+const STORAGE_KEY =
+    "election_system_v2_data";
+
+
+let voters = [
+
+    /* เขต 1 */
+
+    {
+        name:"นาย s3_een",
+        code:"151111",
+        district:"1",
+        number:1,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย bird49678",
+        code:"151112",
+        district:"1",
+        number:2,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย fewer769",
+        code:"151113",
+        district:"1",
+        number:3,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย huijkoplmn7",
+        code:"151114",
+        district:"1",
+        number:4,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Kg_TamThai",
+        code:"151115",
+        district:"1",
+        number:5,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Tagoge12",
+        code:"151116",
+        district:"1",
+        number:6,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Somchai_Tee",
+        code:"151117",
+        district:"1",
+        number:7,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย phasika_solly",
+        code:"151118",
+        district:"1",
+        number:8,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย earth_song.",
+        code:"151119",
+        district:"1",
+        number:9,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นางสาว d_vd7",
+        code:"151121",
+        district:"1",
+        number:10,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย 47392imastupidguy",
+        code:"151122",
+        district:"1",
+        number:11,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย fluke12122546",
+        code:"151123",
+        district:"1",
+        number:12,
+        voted:false,
+        disqualified:false
+    },
+
+
+    /* เขต 2 */
+
+    {
+        name:"นาย Zephyrine12330",
+        code:"151124",
+        district:"2",
+        number:1,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย rhjyffew",
+        code:"151125",
+        district:"2",
+        number:2,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย fnfxgfghhzekeTh123",
+        code:"151126",
+        district:"2",
+        number:3,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย JS_sushi",
+        code:"151127",
+        district:"2",
+        number:4,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย dollawee2011",
+        code:"151128",
+        district:"2",
+        number:5,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย portjdjgbdmd",
+        code:"151129",
+        district:"2",
+        number:6,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย NOD_Drak",
+        code:"151131",
+        district:"2",
+        number:7,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย suukirtt._",
+        code:"151132",
+        district:"2",
+        number:8,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย sa007_asdfffff",
+        code:"151133",
+        district:"2",
+        number:9,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย suns0755",
+        code:"151134",
+        district:"2",
+        number:10,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Gux_778",
+        code:"151135",
+        district:"2",
+        number:11,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย Yodchnin_Bright2556",
+        code:"151136",
+        district:"2",
+        number:12,
+        voted:false,
+        disqualified:true
+    },
+
+
+    /* เขต 3 */
+
+    {
+        name:"นาย POLICE469364",
+        code:"151137",
+        district:"3",
+        number:1,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย uGsegumeBwU",
+        code:"151138",
+        district:"3",
+        number:2,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Br_ight567",
+        code:"151139",
+        district:"3",
+        number:3,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Putter1738",
+        code:"151141",
+        district:"3",
+        number:4,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย aomsap_1054",
+        code:"151142",
+        district:"3",
+        number:5,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย kousaka_reina",
+        code:"151143",
+        district:"3",
+        number:6,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย lmpunpun",
+        code:"151144",
+        district:"3",
+        number:7,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย sleepypxnpnwt",
+        code:"151145",
+        district:"3",
+        number:8,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย soumon334",
+        code:"151146",
+        district:"3",
+        number:9,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย gu1324_12",
+        code:"151147",
+        district:"3",
+        number:10,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย kousaka_reina",
+        code:"151148",
+        district:"3",
+        number:11,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย SuthepSawanwiman",
+        code:"151149",
+        district:"3",
+        number:12,
+        voted:false,
+        disqualified:false
+    },
+
+
+    /* เขต 5 */
+
+    {
+        name:"นาย jackza_430540",
+        code:"151151",
+        district:"5",
+        number:1,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Wina4kk",
+        code:"151152",
+        district:"5",
+        number:2,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย obbypoilce",
+        code:"151153",
+        district:"5",
+        number:3,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย Ramathibodi_1",
+        code:"151154",
+        district:"5",
+        number:4,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย lord_bout",
+        code:"151155",
+        district:"5",
+        number:5,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย y34y661m",
+        code:"151156",
+        district:"5",
+        number:6,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย jirapat2556iouuu",
+        code:"151157",
+        district:"5",
+        number:7,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย somtroy",
+        code:"151158",
+        district:"5",
+        number:8,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย 7AEL16",
+        code:"151159",
+        district:"5",
+        number:9,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย boros0638",
+        code:"151161",
+        district:"5",
+        number:10,
+        voted:false,
+        disqualified:false
+    },
+
+    {
+        name:"นาย jackza_430540",
+        code:"151162",
+        district:"5",
+        number:11,
+        voted:false,
+        disqualified:true
+    },
+
+    {
+        name:"นาย OK12OK23",
+        code:"151163",
+        district:"5",
+        number:12,
+        voted:false,
+        disqualified:false
+    }
+
+];
+
+
+let votes = [];
+
+
+/* =====================================================
+   CANDIDATES
+===================================================== */
+
+const candidates = {
+
+    "1":[
+
+        {
+            name:
+            "เบอร์ 1 นายรณนภา ภารัตเนธี (@Zephyrine12330)"
+        },
+
+        {
+            name:
+            "เบอร์ 2 นาย นเรศ ยงชัย (fewer769)"
+        }
+
+    ],
+
+
+    "2":[
+
+        {
+            name:
+            "เบอร์ 1 นาย นลิน เจริญวงศ์ (huijkoplmn7)"
+        },
+
+        {
+            name:
+            "เบอร์ 2 นายโจนาธาน แบล็ควูด (jackza_430540)"
+        }
+
+    ],
+
+
+    "3":[
+
+        {
+            name:
+            "เบอร์ 1 นายภู ผา (7AEL16)"
+        },
+
+        {
+            name:
+            "เบอร์ 2 นาย วรเมธ มหาศักดิ์เกียรติภูมิวงศ์ (rhjyffew)"
+        }
+
+    ],
+
+
+    "5":[
+
+        {
+            name:
+            "เบอร์ 1 นาย ศุภวัฒน์ รุ่งประชา (Br_ight567)"
+        }
+
+    ]
+
+};
+
+
+/* =====================================================
+   PARTIES
+===================================================== */
+
+const parties = [
+
+    "เบอร์ 1 พรรคเปลี่ยนใหม่",
+
+    "เบอร์ 2 พรรคอนาคตไกล"
+
+];
+
+
+/* =====================================================
+   SESSION
+===================================================== */
+
+let currentSessionUser = null;
+
+let tempVoteData = null;
+
+
+/* =====================================================
+   LOAD DATA
+===================================================== */
+
+function loadData(){
+
+    try{
+
+        const saved =
+            localStorage.getItem(STORAGE_KEY);
+
+        if(saved){
+
+            const data =
+                JSON.parse(saved);
+
+            if(Array.isArray(data.voters)){
+                voters = data.voters;
+            }
+
+            if(Array.isArray(data.votes)){
+                votes = data.votes;
+            }
+
+        }
+
+    }catch(error){
+
+        console.error(
+            "ไม่สามารถโหลดข้อมูลได้",
+            error
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   SAVE DATA
+===================================================== */
+
+function saveData(){
+
+    localStorage.setItem(
+
+        STORAGE_KEY,
+
+        JSON.stringify({
+
+            voters:voters,
+
+            votes:votes,
+
+            updated:
+                new Date().toISOString()
+
+        })
+
+    );
+
+}
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showPage(pageId){
+
+    document
+        .querySelectorAll(".section")
+        .forEach(section => {
+
+            section.classList.remove("active");
+
+        });
+
+
+    const target =
+        document.getElementById(
+            "page-" + pageId
+        );
+
+
+    if(!target){
+        return;
+    }
+
+
+    target.classList.add("active");
+
+
+    document
+        .querySelectorAll("nav a")
+        .forEach(a => {
+
+            a.classList.remove("active");
+
+        });
+
+
+    const nav =
+        document.getElementById(
+            "nav-" + pageId
+        );
+
+
+    if(nav){
+        nav.classList.add("active");
+    }
+
+
+    window.scrollTo({
+
+        top:0,
+
+        behavior:"smooth"
+
+    });
+
+}
+
+
+/* =====================================================
+   REGISTER
+===================================================== */
+
+function registerVoter(){
+
+    const name =
+        document
+            .getElementById("reg-name")
+            .value
+            .trim();
+
+
+    const code =
+        document
+            .getElementById("reg-code")
+            .value
+            .trim();
+
+
+    const district =
+        document
+            .getElementById("reg-district")
+            .value;
+
+
+    const number =
+        document
+            .getElementById("reg-number")
+            .value
+            .trim();
+
+
+    if(
+        !name ||
+        !/^\d{6}$/.test(code) ||
+        !district ||
+        !number
+    ){
+
+        alert(
+            "กรุณากรอกข้อมูลให้ครบถ้วน และหมายเลขต้องเป็นตัวเลข 6 หลัก"
+        );
+
+        return;
+
+    }
+
+
+    if(
+        voters.some(
+            voter => voter.code === code
+        )
+    ){
+
+        alert(
+            "หมายเลขประจำตัวนี้มีอยู่ในระบบแล้ว"
+        );
+
+        return;
+
+    }
+
+
+    voters.push({
+
+        name:name,
+
+        code:code,
+
+        district:district,
+
+        number:parseInt(number,10),
+
+        voted:false,
+
+        disqualified:false
+
+    });
+
+
+    saveData();
+
+
+    alert(
+        "✓ ลงทะเบียนผู้มีสิทธิสำเร็จ"
+    );
+
+
+    document.getElementById(
+        "reg-name"
+    ).value = "";
+
+    document.getElementById(
+        "reg-code"
+    ).value = "";
+
+    document.getElementById(
+        "reg-district"
+    ).value = "";
+
+    document.getElementById(
+        "reg-number"
+    ).value = "";
+
+}
+
+
+/* =====================================================
+   VERIFY VOTER
+===================================================== */
+
+function verifyVoter(){
+
+    const code =
+        document
+            .getElementById("chk-code")
+            .value
+            .trim();
+
+
+    const result =
+        document.getElementById(
+            "chk-result"
+        );
+
+
+    if(!/^\d{6}$/.test(code)){
+
+        result.innerHTML = `
+
+            <div class="announcement">
+
+                ❌ กรุณากรอกหมายเลขประจำตัว
+                ให้ครบ 6 หลัก
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const voter =
+        voters.find(
+            v => v.code === code
+        );
+
+
+    if(!voter){
+
+        result.innerHTML = `
+
+            <div class="announcement">
+
+                ❌ ไม่พบข้อมูลผู้มีสิทธิเลือกตั้ง
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    if(voter.disqualified){
+
+        result.innerHTML = `
+
+            <div class="announcement">
+
+                ⛔ บุคคลนี้ไม่มีสิทธิลงคะแนน
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    if(voter.voted){
+
+        result.innerHTML = `
+
+            <div class="announcement">
+
+                🚫 หมายเลขนี้ได้ใช้สิทธิไปแล้ว
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    currentSessionUser = voter;
+
+
+    result.innerHTML = `
+
+        <div class="announcement">
+
+            <h3>
+                ✓ ตรวจสอบสิทธิสำเร็จ
+            </h3>
+
+            <p>
+                <strong>ชื่อ:</strong>
+                ${escapeHTML(voter.name)}
+            </p>
+
+            <p>
+                <strong>เขตเลือกตั้ง:</strong>
+                เขต ${voter.district}
+            </p>
+
+            <p>
+                <strong>ลำดับ:</strong>
+                ${voter.number}
+            </p>
+
+            <button onclick="renderVoteForm()">
+                เข้าสู่ห้องลงคะแนน →
+            </button>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =====================================================
+   RENDER VOTE
+===================================================== */
+
+function renderVoteForm(){
+
+    if(!currentSessionUser){
+
+        showPage("check");
+
+        return;
+
+    }
+
+
+    showPage("vote");
+
+
+    const container =
+        document.getElementById(
+            "vote-form-container"
+        );
+
+
+    const district =
+        currentSessionUser.district;
+
+
+    let html = `
+
+        <h3>
+            การลงคะแนน
+            เขตพื้นที่ ${district}
+        </h3>
+
+    `;
+
+
+    /* CANDIDATE */
+
+    html += `
+
+        <div class="question">
+
+            <label class="title">
+
+                🗳️ เลือกผู้สมัคร
+                แบบแบ่งเขต
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+    `;
+
+
+    if(candidates[district]){
+
+        candidates[district]
+            .forEach(candidate => {
+
+                html += `
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="vote-cand"
+                            value="${escapeAttribute(candidate.name)}"
+                        >
+
+                        ${escapeHTML(candidate.name)}
+
+                    </label>
+
+                `;
+
+            });
+
+    }
+
+
+    html += `
+
+        <label class="option">
+
+            <input
+                type="radio"
+                name="vote-cand"
+                value="ไม่ประสงค์ลงคะแนน"
+            >
+
+            ไม่ประสงค์ลงคะแนน
+
+        </label>
+
+        </div>
+
+    `;
+
+
+    /* PARTY */
+
+    html += `
+
+        <div class="question">
+
+            <label class="title">
+
+                🏛️ เลือกพรรคการเมือง
+
+                <span class="required">
+                    *
+                </span>
+
+            </label>
+
+    `;
+
+
+    parties.forEach(party => {
+
+        html += `
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="vote-party"
+                    value="${escapeAttribute(party)}"
+                >
+
+                ${escapeHTML(party)}
+
+            </label>
+
+        `;
+
+    });
+
+
+    html += `
+
+        <label class="option">
+
+            <input
+                type="radio"
+                name="vote-party"
+                value="ไม่ประสงค์ลงคะแนน"
+            >
+
+            ไม่ประสงค์ลงคะแนน
+
+        </label>
+
+        </div>
+
+
+        <button onclick="confirmVote()">
+
+            ตรวจสอบก่อนยืนยัน →
+
+        </button>
+
+    `;
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   CONFIRM
+===================================================== */
+
+function confirmVote(){
+
+    const cand =
+        document.querySelector(
+            'input[name="vote-cand"]:checked'
+        );
+
+
+    const party =
+        document.querySelector(
+            'input[name="vote-party"]:checked'
+        );
+
+
+    if(!cand || !party){
+
+        alert(
+            "กรุณาเลือกผู้สมัครและพรรคการเมืองให้ครบ"
+        );
+
+        return;
+
+    }
+
+
+    tempVoteData = {
+
+        cand:cand.value,
+
+        party:party.value
+
+    };
+
+
+    document.getElementById(
+        "confirm-details"
+    ).innerHTML = `
+
+        <p>
+
+            <strong>
+                ผู้ลงคะแนน:
+            </strong>
+
+            ${escapeHTML(
+                currentSessionUser.name
+            )}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                เขตเลือกตั้ง:
+            </strong>
+
+            เขต ${currentSessionUser.district}
+
+        </p>
+
+
+        <hr>
+
+
+        <p>
+
+            <strong>
+                🗳️ ผู้สมัคร:
+            </strong>
+
+            ${escapeHTML(
+                tempVoteData.cand
+            )}
+
+        </p>
+
+
+        <p>
+
+            <strong>
+                🏛️ พรรค:
+            </strong>
+
+            ${escapeHTML(
+                tempVoteData.party
+            )}
+
+        </p>
+
+    `;
+
+
+    showPage("confirm");
+
+}
+
+
+/* =====================================================
+   SUBMIT VOTE
+===================================================== */
+
+function submitFinalVote(){
+
+    if(
+        !currentSessionUser ||
+        !tempVoteData
+    ){
+
+        alert(
+            "ไม่พบข้อมูลการลงคะแนน"
+        );
+
+        showPage("home");
+
+        return;
+
+    }
+
+
+    const voter =
+        voters.find(
+            v =>
+            v.code ===
+            currentSessionUser.code
+        );
+
+
+    if(!voter){
+
+        alert(
+            "ไม่พบข้อมูลผู้มีสิทธิ"
+        );
+
+        finishSession();
+
+        return;
+
+    }
+
+
+    if(voter.voted){
+
+        alert(
+            "คุณได้ใช้สิทธิไปแล้ว"
+        );
+
+        return;
+
+    }
+
+
+    votes.push({
+
+        id:Date.now(),
+
+        voterCode:voter.code,
+
+        district:voter.district,
+
+        cand:tempVoteData.cand,
+
+        party:tempVoteData.party,
+
+        timestamp:
+            new Date().toISOString()
+
+    });
+
+
+    voter.voted = true;
+
+
+    saveData();
+
+
+    currentSessionUser = voter;
+
+
+    showPage("success");
+
+}
+
+
+/* =====================================================
+   FINISH
+===================================================== */
+
+function finishSession(){
+
+    currentSessionUser = null;
+
+    tempVoteData = null;
+
+
+    document.getElementById(
+        "chk-code"
+    ).value = "";
+
+
+    document.getElementById(
+        "chk-result"
+    ).innerHTML = "";
+
+
+    showPage("home");
+
+}
+
+
+/* =====================================================
+   ADMIN LOGIN
+===================================================== */
+
+function adminLogin(){
+
+    const user =
+        document
+            .getElementById("adm-user")
+            .value
+            .trim();
+
+
+    const pass =
+        document
+            .getElementById("adm-pass")
+            .value
+            .trim();
+
+
+    if(
+        user ===
+            "นายโยธิน กัลยาณิวัฒนา"
+        &&
+        pass ===
+            "18405349สส"
+    ){
+
+        document.getElementById(
+            "admin-login-card"
+        ).style.display = "none";
+
+
+        document.getElementById(
+            "admin-dashboard"
+        ).style.display = "block";
+
+
+        renderAdminDashboard();
+
+    }else{
+
+        alert(
+            "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   ADMIN LOGOUT
+===================================================== */
+
+function adminLogout(){
+
+    document.getElementById(
+        "admin-login-card"
+    ).style.display = "block";
+
+
+    document.getElementById(
+        "admin-dashboard"
+    ).style.display = "none";
+
+
+    document.getElementById(
+        "adm-user"
+    ).value = "";
+
+
+    document.getElementById(
+        "adm-pass"
+    ).value = "";
+
+}
+
+
+/* =====================================================
+   ADMIN DASHBOARD
+===================================================== */
+
+function renderAdminDashboard(){
+
+    const validVoters =
+        voters.filter(
+            voter => !voter.disqualified
+        );
+
+
+    const total =
+        validVoters.length;
+
+
+    const voted =
+        validVoters.filter(
+            voter => voter.voted
+        ).length;
+
+
+    const pending =
+        total - voted;
+
+
+    const turnout =
+        total
+        ? ((voted / total) * 100)
+            .toFixed(1)
+        : "0";
+
+
+    document.getElementById(
+        "stat-voters"
+    ).innerText = total;
+
+
+    document.getElementById(
+        "stat-voted"
+    ).innerText = voted;
+
+
+    document.getElementById(
+        "stat-pending"
+    ).innerText = pending;
+
+
+    document.getElementById(
+        "stat-turnout"
+    ).innerText =
+        turnout + "%";
+
+
+    document.getElementById(
+        "last-update"
+    ).innerText =
+        new Date().toLocaleString(
+            "th-TH"
+        );
+
+
+    renderVoterTable(voters);
+
+    renderCandidateResults();
+
+    renderPartyResults();
+
+}
+
+
+/* =====================================================
+   VOTER TABLE
+===================================================== */
+
+function renderVoterTable(list){
+
+    const tbody =
+        document.getElementById(
+            "tbl-voters"
+        );
+
+
+    tbody.innerHTML =
+        list.map(voter => {
+
+            let status;
+
+
+            if(voter.disqualified){
+
+                status =
+                    '<span class="badge badge-disqualified">หมดสิทธิ์</span>';
+
+            }else if(voter.voted){
+
+                status =
+                    '<span class="badge badge-success">ใช้สิทธิแล้ว</span>';
+
+            }else{
+
+                status =
+                    '<span class="badge badge-danger">ยังไม่ใช้สิทธิ</span>';
+
+            }
+
+
+            return `
+
+                <tr>
+
+                    <td>
+                        ${voter.number}
+                    </td>
+
+                    <td>
+                        ${escapeHTML(
+                            voter.name
+                        )}
+                    </td>
+
+                    <td>
+                        ${voter.code}
+                    </td>
+
+                    <td>
+                        เขต ${voter.district}
+                    </td>
+
+                    <td>
+                        ${status}
+                    </td>
+
+                </tr>
+
+            `;
+
+        }).join("");
+
+}
+
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+function searchVoters(keyword){
+
+    keyword =
+        keyword
+            .toLowerCase()
+            .trim();
+
+
+    const filtered =
+        voters.filter(voter =>
+
+            voter.name
+                .toLowerCase()
+                .includes(keyword)
+
+            ||
+
+            voter.code
+                .toLowerCase()
+                .includes(keyword)
+        );
+
+    renderVoterTable(filtered);
+}
+
+
+/* =====================================================
+   RESULTS
+===================================================== */
+
+function renderCandidateResults(){
+
+    const container =
+        document.getElementById(
+            "candidate-results"
+        );
+
+
+    let html = "";
+
+
+    for(const district in candidates){
+
+        html += `
+
+            <h4>
+                เขตพื้นที่ ${district}
+            </h4>
+
+        `;
+
+
+        candidates[district].forEach(candidate => {
+
+            const votesForCandidate =
+                votes.filter(
+                    vote =>
+                    vote.district === district &&
+                    vote.cand === candidate.name
+                ).length;
+
+
+            html += `
+
+                <div class="result-card">
+
+                    <div class="result-header">
+
+                        <div>
+                            ${escapeHTML(candidate.name)}
+                        </div>
+
+                        <div>
+                            ${votesForCandidate} คะแนน
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        });
+
+
+        const noVoteCandidate =
+            votes.filter(
+                vote =>
+                vote.district === district &&
+                vote.cand === "ไม่ประสงค์ลงคะแนน"
+            ).length;
+
+
+        if(noVoteCandidate > 0){
+
+            html += `
+
+                <div class="result-card">
+
+                    <div class="result-header">
+
+                        <div>
+                            ไม่ประสงค์ลงคะแนน
+                        </div>
+
+                        <div>
+                            ${noVoteCandidate} คะแนน
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    container.innerHTML = html;
+
+}
+
+
+function renderPartyResults(){
+
+    const container =
+        document.getElementById(
+            "party-results"
+        );
+
+
+    let html = "";
+
+
+    parties.forEach(party => {
+
+        const votesForParty =
+            votes.filter(
+                vote => vote.party === party
+            ).length;
+
+
+        html += `
+
+            <div class="result-card">
+
+                <div class="result-header">
+
+                    <div>
+                        ${escapeHTML(party)}
+                    </div>
+
+                    <div>
+                        ${votesForParty} คะแนน
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    });
+
+
+    const noVoteParty =
+        votes.filter(
+            vote => vote.party === "ไม่ประสงค์ลงคะแนน"
+        ).length;
+
+
+    if(noVoteParty > 0){
+
+        html += `
+
+            <div class="result-card">
+
+                <div class="result-header">
+
+                    <div>
+                        ไม่ประสงค์ลงคะแนน
+                    </div>
+
+                    <div>
+                        ${noVoteParty} คะแนน
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    container.innerHTML = html;
+
+}
+
+
+/* =====================================================
+   DARK MODE
+===================================================== */
+
+function toggleDarkMode(){
+
+    document.body.classList.toggle("dark");
+
+    const isDarkMode =
+        document.body.classList.contains("dark");
+
+
+    localStorage.setItem(
+        "dark-mode",
+        isDarkMode ? "enabled" : "disabled"
+    );
+
+
+    document.querySelector(
+        ".dark-toggle"
+    ).innerText =
+        isDarkMode ? "☀️" : "🌙";
+
+}
+
+
+if(localStorage.getItem("dark-mode") === "enabled"){
+
+    document.body.classList.add("dark");
+
+    document.querySelector(
+        ".dark-toggle"
+    ).innerText = "☀️";
+
+}
+
+
+/* =====================================================
+   UTILITIES
+===================================================== */
+
+function escapeHTML(str) {
+    const div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function escapeAttribute(str) {
+    return str.replace(/"/g, '&quot;');
+}
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+loadData();
+
+showPage("home");
+
+</script>
+
+</body>
+
+</html>
